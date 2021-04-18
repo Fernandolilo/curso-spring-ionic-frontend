@@ -21,7 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor{
             }
             console.log("Erro detectado pelo interceptor");
             console.log(errorObj);
-
+            
 
             return Observable.throw(errorObj)
         })as any;

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { CategoriaDTO } from '../../app/models/categotia.dto';
-import { API_CONFIG } from '../../config/api.cong';
+import { API_CONFIG } from '../../config/api.config';
 import { CategoriaService } from '../../services/domain/categoria.service';
 
 
@@ -25,8 +25,9 @@ export class CategoriasPage {
     this.categoriaService.findAll()
       .subscribe(response => {
         this.items = response;
+      
       },
-      error => {
-      });
+      error => { });
+     
   }  
 }
