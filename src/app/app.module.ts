@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service';
 import { StorageService } from '../services/storage.service';
 import { ErrorInterceptorProvider } from '../interceptors/error-interceptos';
 import { CategoriaService } from '../services/domain/categoria.service';
-
+import { ClienteService } from '../services/domain/cliente.service';
 
 
 
@@ -36,7 +36,8 @@ import { CategoriaService } from '../services/domain/categoria.service';
     CategoriaService,
     ErrorInterceptorProvider,
     AuthService,
-    StorageService
+    StorageService,
+    ClienteService
   ]
 })
 export class AppModule {}
