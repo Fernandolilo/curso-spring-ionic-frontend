@@ -24,22 +24,30 @@ export class ProfilePage {
   }
 
   ionViewDidLoad() {
-    let locauUser = this.storage.getLocalUser();
-    if(locauUser && locauUser.email){
-      this.clienteService.findByEmail(locauUser.email)
+    let localUser = this.storage.getLocalUser();
+    if (localUser && localUser.email) {
+      this.clienteService.findByEmail(localUser.email)
         .subscribe(response => {
           this.cliente = response;
-          this.getImageIfExistis();         
+          this.getImageIfExists();
         },
-        error => {});
-    } 
+        error => {
+          if (error.status == 403) {
+            this.navCtrl.setRoot('HomePage');
+          }
+        });
+    }
+    else {
+      this.navCtrl.setRoot('HomePage');
+    }
   }
-  getImageIfExistis() {
+
+  getImageIfExists() {
     this.clienteService.getImageFromBucket(this.cliente.id)
     .subscribe(response => {
       this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
     },
     error => {});
   }
-  
+
 }

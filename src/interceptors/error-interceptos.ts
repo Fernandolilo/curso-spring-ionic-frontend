@@ -1,32 +1,81 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AlertController } from "ionic-angular";
 import { Observable } from "rxjs/Rx";
+import { StorageService } from "../services/storage.service";
 
 
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor{
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
-       
-        return next.handle(req)
-        .catch((error, caught) =>{
+    constructor(public storage: StorageService, public alertCtrl: AlertController){
+    }
 
-            let errorObj =error;
-            if(errorObj.error){
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return next.handle(req)
+        .catch((error, caught) => {
+
+            let errorObj = error;
+            if (errorObj.error) {
                 errorObj = errorObj.error;
             }
-            if(!errorObj.status){
+            if (!errorObj.status) {
                 errorObj = JSON.parse(errorObj);
             }
-            console.log("Erro detectado pelo interceptor");
+
+            console.log("Erro detectado pelo interceptor:");
             console.log(errorObj);
-            
 
-            return Observable.throw(errorObj)
-        })as any;
+            switch(errorObj.status) {
+                case 401:
+                    this.handle401();
+                    break;
+                
+                case 403:
+                    console.log(errorObj);
+                    this.handle403();
+                    break;
 
+                default:
+                    this.handleDefaulteErro(errorObj);
+
+            }
+
+            return Observable.throw(errorObj);
+        }) as any;
     }
+
+    handle403() {
+        this.storage.setLocalUser(null);
+    }
+    handle401(){
+        let alert = this.alertCtrl.create({
+            title: 'Erro 401: falha de autenticação',
+            message: 'Email ou senha incorreto',
+            enableBackdropDismiss: false,
+            buttons: [
+                {
+                    text:  'ok'
+                }
+            ]
+        });
+        alert.present();
+    }
+    handleDefaulteErro(errorObj) {
+        let alert = this.alertCtrl.create({
+            title: 'Erro ' + errorObj.status + ': ' + errorObj.error,
+            message: errorObj.message,
+            enableBackdropDismiss: false,
+            buttons: [
+                {
+                    text:  'ok'
+                }
+            ]
+        });
+        alert.present();
+    }
+
 }
 export const ErrorInterceptorProvider ={
     provide: HTTP_INTERCEPTORS,
