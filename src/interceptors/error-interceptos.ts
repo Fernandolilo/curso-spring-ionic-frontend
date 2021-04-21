@@ -33,7 +33,6 @@ export class ErrorInterceptor implements HttpInterceptor{
                     break;
                 
                 case 403:
-                    console.log(errorObj);
                     this.handle403();
                     break;
 
