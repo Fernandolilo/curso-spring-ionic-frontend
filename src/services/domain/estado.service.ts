@@ -13,5 +13,6 @@ export class EstadoService{
     findAll(): Observable<EstadoDTO[]> {
         return this.http.get<EstadoDTO[]>(`${API_CONFIG.baseUrl}/estados`);
     }
+    
 
 }
