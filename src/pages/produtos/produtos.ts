@@ -40,7 +40,7 @@ export class ProdutosPage {
         error => {})
     }
   }
-  ShowDetail(){
-    this.navCtrl.push('ProdutoDatailPage');
+  ShowDetail(produto_id: string){
+    this.navCtrl.push('ProdutoDatailPage', {produto_id: produto_id});
   }
 }
